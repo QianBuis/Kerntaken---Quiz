@@ -2,3 +2,5 @@
 1. python -m venv venv
 2. venv\Scripts\Activate.ps1
 3. pip install mysql-connector-python
+4. pip install bcrypt
+pip install flask
