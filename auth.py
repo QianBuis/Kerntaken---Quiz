@@ -1,3 +1,4 @@
+# auth.py
 import bcrypt
 import mysql.connector
 from database import get_connection
@@ -16,7 +17,7 @@ def register_user(username, password):
         conn.commit()
         return True
     except mysql.connector.IntegrityError:
-        # username bestaat al (UNIQUE)
+        # Duplicate username (UNIQUE constraint)
         return False
     finally:
         cursor.close()
