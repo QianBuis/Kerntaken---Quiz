@@ -23,17 +23,14 @@ def register():
         password = request.form["password"]
 
         ok = register_user(username, password)
-        if ok is False:
-            return "Gebruikersnaam bestaat al"
+        if not ok:
+            return render_template("register.html", error="Gebruikersnaam bestaat al.")
 
         return redirect("/login")
 
     return render_template("register.html")
 
 
-# ========================
-# LOGIN
-# ========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -45,13 +42,12 @@ def login():
         if data:
             session["username"] = username
             session["user_id"] = data["user_id"]
-            session["role"] = data["role"]   # 'player' of 'admin'
+            session["role"] = data["role"]
             return redirect("/dashboard")
-        else:
-            return "Login mislukt"
+
+        return render_template("login.html", error="Onjuiste gegevens.")
 
     return render_template("login.html")
-
 
 # ========================
 # DASHBOARD
