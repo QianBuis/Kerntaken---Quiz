@@ -1,4 +1,5 @@
 import bcrypt
+import mysql.connector
 from database import get_connection
 
 def register_user(username, password):
@@ -7,22 +8,24 @@ def register_user(username, password):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "INSERT INTO users (username, password) VALUES (%s, %s)",
-        (username, hashed_password)
-    )
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return True
-
+    try:
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, hashed_password)
+        )
+        conn.commit()
+        return True
+    except mysql.connector.IntegrityError:
+        # username bestaat al (UNIQUE)
+        return False
+    finally:
+        cursor.close()
+        conn.close()
 
 def login_user(username, password):
     conn = get_connection()
     cursor = conn.cursor()
 
-    # haal ook id op
     cursor.execute("SELECT id, password, role FROM users WHERE username = %s", (username,))
     result = cursor.fetchone()
 
@@ -32,7 +35,6 @@ def login_user(username, password):
     if result:
         user_id, stored_password, role = result
         if bcrypt.checkpw(password.encode(), stored_password.encode()):
-            # role kan NULL zijn → fallback naar player
             return {"user_id": user_id, "role": role or "player"}
 
     return None
