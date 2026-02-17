@@ -1,49 +1,38 @@
 import bcrypt
 from database import get_connection
 
-def register():
-    username = input("Kies gebruikersnaam: ")
-    password = input("Kies wachtwoord: ")
-
-    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+def register_user(username, password):
+    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         "INSERT INTO users (username, password) VALUES (%s, %s)",
-        (username, hashed_password.decode())
+        (username, hashed_password)
     )
 
     conn.commit()
     cursor.close()
     conn.close()
+    return True
 
-    print("Account aangemaakt!")
 
-
-def login():
-    username = input("Gebruikersnaam: ")
-    password = input("Wachtwoord: ")
-
+def login_user(username, password):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT password FROM users WHERE username = %s", (username,))
+    # haal ook id op
+    cursor.execute("SELECT id, password, role FROM users WHERE username = %s", (username,))
     result = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
     if result:
-        stored_password = result[0]
-
+        user_id, stored_password, role = result
         if bcrypt.checkpw(password.encode(), stored_password.encode()):
-            print("Login succesvol!")
-            return True
-        else:
-            print("Fout wachtwoord.")
-            return False
-    else:
-        print("Gebruiker niet gevonden.")
-        return False
+            # role kan NULL zijn → fallback naar player
+            return {"user_id": user_id, "role": role or "player"}
+
+    return None
