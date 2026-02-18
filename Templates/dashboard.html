@@ -1,23 +1,24 @@
-<!-- templates/dashboard.html -->
 <h2>Welkom {{ username }}</h2>
 <p>Rol: {{ role }}</p>
 
-<h3>Beschikbare quizzen</h3>
+<p>
+  <a href="/choose-category">🎯 Start quiz via categorie</a>
+</p>
+
+<h3>Beschikbare quizzen (alles)</h3>
 
 {% if quizzes %}
-    <ul>
-        {% for quiz in quizzes %}
-            <li>
-                <strong>{{ quiz.title }}</strong>
-                {% if quiz.category %}
-                    (Categorie: {{ quiz.category }})
-                {% endif %}
-                - <a href="/quiz/{{ quiz.id }}/start">Start</a>
-            </li>
-        {% endfor %}
-    </ul>
+  <ul>
+    {% for q in quizzes %}
+      <li>
+        <b>{{ q.title }}</b>
+        {% if q.category %} (Categorie: {{ q.category }}) {% endif %}
+        - <a href="/quiz/{{ q.id }}/start">Start</a>
+      </li>
+    {% endfor %}
+  </ul>
 {% else %}
-    <p>Er zijn momenteel geen actieve quizzen.</p>
+  <p>Er zijn momenteel geen actieve quizzen.</p>
 {% endif %}
 
 <a href="/logout">Uitloggen</a>

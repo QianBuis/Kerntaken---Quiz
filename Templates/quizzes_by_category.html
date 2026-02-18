@@ -1,0 +1,16 @@
+<h2>Quizzen in deze categorie</h2>
+
+{% if quizzes %}
+  <ul>
+    {% for q in quizzes %}
+      <li>
+        <b>{{ q.title }}</b> - <a href="/quiz/{{ q.id }}/start">Start</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Geen actieve quizzen in deze categorie.</p>
+{% endif %}
+
+<a href="/choose-category">Andere categorie kiezen</a> |
+<a href="/dashboard">Dashboard</a>
