@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
 from quiz import get_active_quizzes, get_categories, get_quizzes_by_category
+from quiz import get_question_with_answers
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey123"
@@ -104,6 +105,28 @@ def quiz_start(quiz_id):
 def logout():
     session.clear()
     return redirect("/login")
+
+@app.route("/quiz/<int:quiz_id>/question")
+def quiz_question(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    if session.get("quiz_id") != quiz_id:
+        return redirect(f"/quiz/{quiz_id}/start")
+
+    q_index = session.get("q_index", 0)
+
+    question = get_question_with_answers(quiz_id, q_index)
+
+    if not question:
+        return "Geen vragen gevonden voor deze quiz."
+
+    return render_template(
+        "question.html",
+        quiz_id=quiz_id,
+        question=question,
+        q_index=q_index
+    )
 
 
 if __name__ == "__main__":
