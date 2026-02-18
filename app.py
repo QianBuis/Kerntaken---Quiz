@@ -87,7 +87,7 @@ def quizzes_by_category(category_id):
     return render_template("quizzes_by_category.html", quizzes=quizzes)
 
 
-# (Stap 3: quiz start had je al, maar laat hem nu gewoon bestaan)
+# Stap 3: quiz start
 @app.route("/quiz/<int:quiz_id>/start")
 def quiz_start(quiz_id):
     if "username" not in session:
@@ -96,8 +96,8 @@ def quiz_start(quiz_id):
     session["quiz_id"] = quiz_id
     session["q_index"] = 0
     session["correct"] = 0
+    session["chosen_answers"] = {}  # handig om meteen te resetten
 
-    # Stap 5 gaat hierna komen:
     return redirect(f"/quiz/{quiz_id}/question")
 
 
@@ -106,7 +106,11 @@ def logout():
     session.clear()
     return redirect("/login")
 
-@app.route("/quiz/<int:quiz_id>/question")
+
+# =========================
+# STAP 6: per vraag 1 antwoord kiezen (opslaan)
+# =========================
+@app.route("/quiz/<int:quiz_id>/question", methods=["GET", "POST"])
 def quiz_question(quiz_id):
     if "username" not in session:
         return redirect("/login")
@@ -116,16 +120,35 @@ def quiz_question(quiz_id):
 
     q_index = session.get("q_index", 0)
 
-    question = get_question_with_answers(quiz_id, q_index)
+    # POST: speler kiest 1 antwoord en bevestigt
+    if request.method == "POST":
+        answer_id = request.form.get("answer_id")
+        if not answer_id:
+            return redirect(f"/quiz/{quiz_id}/question")
 
+        chosen = session.get("chosen_answers", {})
+        chosen[str(q_index)] = int(answer_id)
+        session["chosen_answers"] = chosen
+
+        # nog geen volgende vraag (stap 8), alleen opslaan
+        return redirect(f"/quiz/{quiz_id}/question?saved=1")
+
+    # GET: toon vraag
+    question = get_question_with_answers(quiz_id, q_index)
     if not question:
         return "Geen vragen gevonden voor deze quiz."
+
+    saved = request.args.get("saved") == "1"
+    chosen = session.get("chosen_answers", {})
+    chosen_answer_id = chosen.get(str(q_index))
 
     return render_template(
         "question.html",
         quiz_id=quiz_id,
         question=question,
-        q_index=q_index
+        q_index=q_index,
+        saved=saved,
+        chosen_answer_id=chosen_answer_id
     )
 
 
