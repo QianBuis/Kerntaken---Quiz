@@ -97,3 +97,26 @@ def create_quiz(title, category_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+def add_question_with_answers(quiz_id, question_text, answers, correct_index):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Vraag toevoegen
+    cursor.execute(
+        "INSERT INTO questions (quiz_id, question_text) VALUES (%s, %s)",
+        (quiz_id, question_text)
+    )
+    question_id = cursor.lastrowid
+
+    # Antwoorden toevoegen
+    for i, answer_text in enumerate(answers):
+        is_correct = 1 if i == correct_index else 0
+        cursor.execute(
+            "INSERT INTO answers (question_id, answer_text, is_correct) VALUES (%s, %s, %s)",
+            (question_id, answer_text, is_correct)
+        )
+
+    conn.commit()
+    cursor.close()
+    conn.close()

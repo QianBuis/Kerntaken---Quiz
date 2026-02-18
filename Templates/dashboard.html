@@ -28,3 +28,15 @@
     <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
   </p>
 {% endif %}
+
+{% if role == "admin" %}
+  <h3>Admin opties</h3>
+  <ul>
+    {% for q in quizzes %}
+      <li>
+        {{ q.title }} -
+        <a href="/admin/add-question/{{ q.id }}">➕ Vraag toevoegen</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

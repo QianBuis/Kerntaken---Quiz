@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
 from admin import admin_bp
 from quiz import (
+    
     get_active_quizzes,
     get_categories,
     get_quizzes_by_category,

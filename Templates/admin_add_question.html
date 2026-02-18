@@ -1,0 +1,31 @@
+<h2>Vraag toevoegen</h2>
+
+<form method="POST">
+  <label>Vraag:</label><br>
+  <input type="text" name="question_text" required><br><br>
+
+  <label>Antwoord A:</label><br>
+  <input type="text" name="answer1" required><br>
+
+  <label>Antwoord B:</label><br>
+  <input type="text" name="answer2" required><br>
+
+  <label>Antwoord C:</label><br>
+  <input type="text" name="answer3" required><br>
+
+  <label>Antwoord D:</label><br>
+  <input type="text" name="answer4" required><br><br>
+
+  <label>Correct antwoord:</label><br>
+  <select name="correct">
+    <option value="0">A</option>
+    <option value="1">B</option>
+    <option value="2">C</option>
+    <option value="3">D</option>
+  </select><br><br>
+
+  <button type="submit">Opslaan</button>
+</form>
+
+<br>
+<a href="/dashboard">Terug</a>
