@@ -62,6 +62,20 @@ def logout():
     session.clear()
     return redirect("/login")
 
+@app.route("/quiz/<int:quiz_id>/start")
+def quiz_start(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    # Zet quiz state klaar
+    session["quiz_id"] = quiz_id
+    session["q_index"] = 0
+    session["correct"] = 0
+
+    # Volgende stap (stap 4/5): de vraag-pagina
+    return redirect(f"/quiz/{quiz_id}/question")
+
+
 if __name__ == "__main__":
     print(">>> Flask start...")
     app.run(host="127.0.0.1", port=5000, debug=True)
