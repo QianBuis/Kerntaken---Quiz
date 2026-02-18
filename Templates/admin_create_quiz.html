@@ -1,0 +1,18 @@
+<h2>Nieuwe quiz aanmaken</h2>
+
+<form method="POST">
+  <label>Titel:</label><br>
+  <input type="text" name="title" required><br><br>
+
+  <label>Categorie:</label><br>
+  <select name="category_id" required>
+    {% for c in categories %}
+      <option value="{{ c.id }}">{{ c.name }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <button type="submit">Quiz aanmaken</button>
+</form>
+
+<br>
+<a href="/dashboard">Terug naar dashboard</a>

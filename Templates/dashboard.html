@@ -22,3 +22,9 @@
 {% endif %}
 
 <a href="/logout">Uitloggen</a>
+
+{% if role == "admin" %}
+  <p>
+    <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
+  </p>
+{% endif %}

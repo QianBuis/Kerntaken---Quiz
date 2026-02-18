@@ -1,9 +1,16 @@
 from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
-from quiz import get_active_quizzes, get_categories, get_quizzes_by_category
-from quiz import get_question_with_answers
+from admin import admin_bp
+from quiz import (
+    get_active_quizzes,
+    get_categories,
+    get_quizzes_by_category,
+    get_question_with_answers,
+    is_answer_correct
+)
 
 app = Flask(__name__)
+app.register_blueprint(admin_bp)
 app.secret_key = "supersecretkey123"
 
 
@@ -20,7 +27,10 @@ def register():
 
         ok = register_user(username, password)
         if not ok:
-            return render_template("register.html", error="❌ Deze gebruikersnaam bestaat al. Kies een andere.")
+            return render_template(
+                "register.html",
+                error="❌ Deze gebruikersnaam bestaat al. Kies een andere."
+            )
 
         return redirect("/login")
 
@@ -52,7 +62,6 @@ def dashboard():
         return redirect("/login")
 
     quizzes = get_active_quizzes()
-
     return render_template(
         "dashboard.html",
         username=session["username"],
@@ -62,7 +71,7 @@ def dashboard():
 
 
 # =========================
-# STAP 4: categorie kiezen → quiz kiezen
+# CATEGORIE → QUIZ KIEZEN
 # =========================
 
 @app.route("/choose-category", methods=["GET", "POST"])
@@ -87,7 +96,10 @@ def quizzes_by_category(category_id):
     return render_template("quizzes_by_category.html", quizzes=quizzes)
 
 
-# Stap 3: quiz start
+# =========================
+# QUIZ FLOW
+# =========================
+
 @app.route("/quiz/<int:quiz_id>/start")
 def quiz_start(quiz_id):
     if "username" not in session:
@@ -96,20 +108,12 @@ def quiz_start(quiz_id):
     session["quiz_id"] = quiz_id
     session["q_index"] = 0
     session["correct"] = 0
-    session["chosen_answers"] = {}  # handig om meteen te resetten
+    session["chosen_answers"] = {}
+    session.pop("last_feedback", None)
 
     return redirect(f"/quiz/{quiz_id}/question")
 
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/login")
-
-
-# =========================
-# STAP 6: per vraag 1 antwoord kiezen (opslaan)
-# =========================
 @app.route("/quiz/<int:quiz_id>/question", methods=["GET", "POST"])
 def quiz_question(quiz_id):
     if "username" not in session:
@@ -120,25 +124,40 @@ def quiz_question(quiz_id):
 
     q_index = session.get("q_index", 0)
 
-    # POST: speler kiest 1 antwoord en bevestigt
     if request.method == "POST":
+        # Volgende vraag
+        if "next" in request.form:
+            session["q_index"] = q_index + 1
+            session.pop("last_feedback", None)
+            return redirect(f"/quiz/{quiz_id}/question")
+
+        # Antwoord kiezen + feedback
         answer_id = request.form.get("answer_id")
         if not answer_id:
             return redirect(f"/quiz/{quiz_id}/question")
 
+        answer_id = int(answer_id)
+
         chosen = session.get("chosen_answers", {})
-        chosen[str(q_index)] = int(answer_id)
+        chosen[str(q_index)] = answer_id
         session["chosen_answers"] = chosen
 
-        # nog geen volgende vraag (stap 8), alleen opslaan
-        return redirect(f"/quiz/{quiz_id}/question?saved=1")
+        correct = is_answer_correct(answer_id)
+        if correct:
+            session["correct"] = session.get("correct", 0) + 1
+            session["last_feedback"] = "✅ Correct!"
+        else:
+            session["last_feedback"] = "❌ Fout!"
 
-    # GET: toon vraag
+        return redirect(f"/quiz/{quiz_id}/question")
+
     question = get_question_with_answers(quiz_id, q_index)
-    if not question:
-        return "Geen vragen gevonden voor deze quiz."
 
-    saved = request.args.get("saved") == "1"
+    if not question:
+        session.pop("last_feedback", None)
+        return redirect(f"/quiz/{quiz_id}/result")
+
+    feedback = session.get("last_feedback")
     chosen = session.get("chosen_answers", {})
     chosen_answer_id = chosen.get(str(q_index))
 
@@ -147,9 +166,27 @@ def quiz_question(quiz_id):
         quiz_id=quiz_id,
         question=question,
         q_index=q_index,
-        saved=saved,
+        feedback=feedback,
         chosen_answer_id=chosen_answer_id
     )
+
+
+@app.route("/quiz/<int:quiz_id>/result")
+def quiz_result(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    if session.get("quiz_id") != quiz_id:
+        return redirect("/dashboard")
+
+    score = session.get("correct", 0)
+    return render_template("result.html", quiz_id=quiz_id, score=score)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
 
 
 if __name__ == "__main__":

@@ -73,3 +73,27 @@ def get_question_with_answers(quiz_id, index):
     question["answers"] = answers
     return question
 
+def is_answer_correct(answer_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT is_correct FROM answers WHERE id = %s", (answer_id,))
+    row = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return bool(row and row[0] == 1)
+
+def create_quiz(title, category_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO quizzes (title, category_id, is_active) VALUES (%s, %s, 1)",
+        (title, category_id)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()

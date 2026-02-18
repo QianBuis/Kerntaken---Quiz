@@ -1,8 +1,7 @@
-<!-- templates/question.html (volledig voor stap 6) -->
 <h2>Vraag {{ q_index + 1 }}</h2>
 
-{% if saved %}
-  <p style="color:green;">✅ Antwoord opgeslagen.</p>
+{% if feedback %}
+  <p style="font-weight:bold;">{{ feedback }}</p>
 {% endif %}
 
 <p>{{ question.question_text }}</p>
@@ -17,7 +16,7 @@
           value="{{ a.id }}"
           required
           {% if chosen_answer_id == a.id %}checked{% endif %}
-          {% if saved %}disabled{% endif %}
+          {% if feedback %}disabled{% endif %}
         >
         {{ ["A","B","C","D"][loop.index0] }}. {{ a.answer_text }}
       </label>
@@ -25,8 +24,11 @@
   {% endfor %}
 
   <br>
-  {% if not saved %}
-    <button type="submit">Bevestig antwoord</button>
+
+  {% if not feedback %}
+      <button type="submit">Bevestig antwoord</button>
+  {% else %}
+      <button type="submit" name="next">Volgende vraag</button>
   {% endif %}
 </form>
 
