@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
+from quiz import get_active_quizzes
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey123"
@@ -46,11 +47,15 @@ def dashboard():
     if "username" not in session:
         return redirect("/login")
 
+    quizzes = get_active_quizzes()
+
     return render_template(
         "dashboard.html",
         username=session["username"],
-        role=session.get("role")
+        role=session.get("role"),
+        quizzes=quizzes
     )
+
 
 @app.route("/logout")
 def logout():
@@ -60,5 +65,3 @@ def logout():
 if __name__ == "__main__":
     print(">>> Flask start...")
     app.run(host="127.0.0.1", port=5000, debug=True)
-
-#hi test 2

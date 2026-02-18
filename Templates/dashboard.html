@@ -1,7 +1,23 @@
 <!-- templates/dashboard.html -->
 <h2>Welkom {{ username }}</h2>
-
 <p>Rol: {{ role }}</p>
 
-<a href="/logout">Uitloggen</a>
+<h3>Beschikbare quizzen</h3>
 
+{% if quizzes %}
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <strong>{{ quiz.title }}</strong>
+                {% if quiz.category %}
+                    (Categorie: {{ quiz.category }})
+                {% endif %}
+                - <a href="/quiz/{{ quiz.id }}/start">Start</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Er zijn momenteel geen actieve quizzen.</p>
+{% endif %}
+
+<a href="/logout">Uitloggen</a>
