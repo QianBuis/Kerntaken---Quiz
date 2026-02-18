@@ -21,22 +21,24 @@
   <p>Er zijn momenteel geen actieve quizzen.</p>
 {% endif %}
 
-<a href="/logout">Uitloggen</a>
-
 {% if role == "admin" %}
+  <hr>
+
   <p>
     <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
   </p>
-{% endif %}
 
-{% if role == "admin" %}
   <h3>Admin opties</h3>
   <ul>
     {% for q in quizzes %}
       <li>
-        {{ q.title }} -
-        <a href="/admin/add-question/{{ q.id }}">➕ Vraag toevoegen</a>
+        <b>{{ q.title }}</b>
+        - <a href="/admin/add-question/{{ q.id }}">➕ Vraag toevoegen</a>
+        | <a href="/admin/questions/{{ q.id }}">📝 Vragen beheren</a>
       </li>
     {% endfor %}
   </ul>
 {% endif %}
+
+<hr>
+<a href="/logout">Uitloggen</a>

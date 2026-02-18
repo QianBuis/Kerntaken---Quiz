@@ -1,0 +1,24 @@
+<h2>Vragen beheren</h2>
+
+{% if questions %}
+  <ul>
+    {% for q in questions %}
+      <li>
+        {{ q.question_text }}
+        |
+        <a href="/admin/edit-question/{{ q.id }}">✏ Bewerken</a>
+        |
+        <form method="POST"
+              action="/admin/delete-question/{{ q.id }}"
+              style="display:inline;">
+          <button type="submit">🗑 Verwijder</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Geen vragen gevonden.</p>
+{% endif %}
+
+<br>
+<a href="/dashboard">Terug</a>

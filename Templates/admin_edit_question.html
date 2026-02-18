@@ -1,0 +1,48 @@
+<h2>Vraag bewerken</h2>
+
+<form method="POST">
+
+  <label>Vraag:</label><br>
+  <input type="text"
+         name="question_text"
+         value="{{ question.question_text }}"
+         required><br><br>
+
+  <label>Antwoord A:</label><br>
+  <input type="text"
+         name="answer1"
+         value="{{ answers[0].answer_text }}"
+         required><br>
+
+  <label>Antwoord B:</label><br>
+  <input type="text"
+         name="answer2"
+         value="{{ answers[1].answer_text }}"
+         required><br>
+
+  <label>Antwoord C:</label><br>
+  <input type="text"
+         name="answer3"
+         value="{{ answers[2].answer_text }}"
+         required><br>
+
+  <label>Antwoord D:</label><br>
+  <input type="text"
+         name="answer4"
+         value="{{ answers[3].answer_text }}"
+         required><br><br>
+
+  <label>Correct antwoord:</label><br>
+  <select name="correct">
+    <option value="0" {% if correct_index == 0 %}selected{% endif %}>A</option>
+    <option value="1" {% if correct_index == 1 %}selected{% endif %}>B</option>
+    <option value="2" {% if correct_index == 2 %}selected{% endif %}>C</option>
+    <option value="3" {% if correct_index == 3 %}selected{% endif %}>D</option>
+  </select><br><br>
+
+  <button type="submit">Opslaan</button>
+
+</form>
+
+<br>
+<a href="/dashboard">Terug</a>

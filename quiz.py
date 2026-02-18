@@ -120,3 +120,76 @@ def add_question_with_answers(quiz_id, question_text, answers, correct_index):
     conn.commit()
     cursor.close()
     conn.close()
+
+def delete_question(question_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # eerst antwoorden weg (FK-safe)
+    cursor.execute("DELETE FROM answers WHERE question_id=%s", (question_id,))
+    cursor.execute("DELETE FROM questions WHERE id=%s", (question_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def get_questions_by_quiz(quiz_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, question_text FROM questions WHERE quiz_id=%s ORDER BY id",
+        (quiz_id,)
+    )
+    questions = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return questions
+
+def get_question_with_all_answers(question_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, question_text FROM questions WHERE id=%s",
+        (question_id,)
+    )
+    question = cursor.fetchone()
+
+    cursor.execute(
+        "SELECT id, answer_text, is_correct FROM answers WHERE question_id=%s ORDER BY id",
+        (question_id,)
+    )
+    answers = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return question, answers
+
+def update_question_with_answers(question_id, question_text, answers, correct_index):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE questions SET question_text=%s WHERE id=%s",
+        (question_text, question_id)
+    )
+
+    cursor.execute(
+        "SELECT id FROM answers WHERE question_id=%s ORDER BY id",
+        (question_id,)
+    )
+    answer_ids = [row[0] for row in cursor.fetchall()]
+
+    for i, answer_id in enumerate(answer_ids):
+        is_correct = 1 if i == correct_index else 0
+        cursor.execute(
+            "UPDATE answers SET answer_text=%s, is_correct=%s WHERE id=%s",
+            (answers[i], is_correct, answer_id)
+        )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
