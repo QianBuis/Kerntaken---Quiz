@@ -5,7 +5,7 @@
   <a href="/choose-category">🎯 Start quiz via categorie</a>
 </p>
 
-<h3>Beschikbare quizzen (alles)</h3>
+<h3>Beschikbare quizzen (actief)</h3>
 
 {% if quizzes %}
   <ul>
@@ -28,16 +28,41 @@
     <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
   </p>
 
-  <h3>Admin opties</h3>
-  <ul>
-    {% for q in quizzes %}
-      <li>
-        <b>{{ q.title }}</b>
-        - <a href="/admin/add-question/{{ q.id }}">➕ Vraag toevoegen</a>
-        | <a href="/admin/questions/{{ q.id }}">📝 Vragen beheren</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <h3>Admin: Quiz beheer (actief/inactief)</h3>
+
+  {% if admin_quizzes %}
+    <ul>
+      {% for aq in admin_quizzes %}
+        <li>
+          <b>{{ aq.title }}</b>
+          {% if aq.category %} ({{ aq.category }}) {% endif %}
+          - Status:
+          {% if aq.is_active == 1 %}
+            <span style="color:green;"><b>Actief</b></span>
+          {% else %}
+            <span style="color:red;"><b>Inactief</b></span>
+          {% endif %}
+
+          | <a href="/admin/add-question/{{ aq.id }}">➕ Vraag toevoegen</a>
+          | <a href="/admin/questions/{{ aq.id }}">📝 Vragen beheren</a>
+
+          <form method="POST"
+                action="/admin/toggle-quiz/{{ aq.id }}"
+                style="display:inline; margin-left:10px;">
+            {% if aq.is_active == 1 %}
+              <input type="hidden" name="is_active" value="0">
+              <button type="submit">Zet inactief</button>
+            {% else %}
+              <input type="hidden" name="is_active" value="1">
+              <button type="submit">Zet actief</button>
+            {% endif %}
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Geen quizzen gevonden.</p>
+  {% endif %}
 {% endif %}
 
 <hr>

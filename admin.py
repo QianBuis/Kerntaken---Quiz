@@ -3,6 +3,7 @@ from quiz import create_quiz, get_categories
 from quiz import add_question_with_answers, get_active_quizzes
 from quiz import get_questions_by_quiz, delete_question
 from quiz import get_question_with_all_answers, update_question_with_answers
+from quiz import get_all_quizzes, set_quiz_active
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -111,3 +112,16 @@ def edit_question(question_id):
         answers=answers,
         correct_index=correct_index
     )
+
+@admin_bp.route("/admin/toggle-quiz/<int:quiz_id>", methods=["POST"])
+def toggle_quiz(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "admin":
+        return redirect("/dashboard")
+
+    is_active = request.form.get("is_active") == "1"
+    set_quiz_active(quiz_id, is_active)
+
+    return redirect("/dashboard")

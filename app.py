@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
 from admin import admin_bp
+from quiz import get_all_quizzes  # voeg bovenaan toe bij je imports
 from quiz import (
     
     get_active_quizzes,
@@ -63,14 +64,18 @@ def dashboard():
         return redirect("/login")
 
     quizzes = get_active_quizzes()
+
+    admin_quizzes = None
+    if session.get("role") == "admin":
+        admin_quizzes = get_all_quizzes()
+
     return render_template(
         "dashboard.html",
         username=session["username"],
         role=session.get("role"),
-        quizzes=quizzes
+        quizzes=quizzes,
+        admin_quizzes=admin_quizzes
     )
-
-
 # =========================
 # CATEGORIE → QUIZ KIEZEN
 # =========================

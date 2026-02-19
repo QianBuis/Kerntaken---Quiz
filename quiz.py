@@ -193,3 +193,33 @@ def update_question_with_answers(question_id, question_text, answers, correct_in
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_all_quizzes():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT q.id, q.title, q.is_active, c.name AS category
+        FROM quizzes q
+        LEFT JOIN categories c ON q.category_id = c.id
+        ORDER BY q.created_at DESC
+    """)
+    quizzes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return quizzes
+
+
+def set_quiz_active(quiz_id, is_active):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE quizzes SET is_active=%s WHERE id=%s",
+        (1 if is_active else 0, quiz_id)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
