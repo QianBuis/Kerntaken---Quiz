@@ -1,18 +1,48 @@
-<h2>Nieuwe quiz aanmaken</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nieuwe quiz</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<form method="POST">
-  <label>Titel:</label><br>
-  <input type="text" name="title" required><br><br>
+<body>
 
-  <label>Categorie:</label><br>
-  <select name="category_id" required>
-    {% for c in categories %}
-      <option value="{{ c.id }}">{{ c.name }}</option>
-    {% endfor %}
-  </select><br><br>
+<div class="card">
+  <h2 class="center">Nieuwe quiz aanmaken</h2>
+  <p class="sub center">Maak een nieuwe quiz en koppel deze aan een categorie.</p>
 
-  <button type="submit">Quiz aanmaken</button>
-</form>
+  <form method="POST" class="stack stack--lg">
 
-<br>
-<a href="/dashboard">Terug naar dashboard</a>
+    <div>
+      <label for="title">Titel</label>
+      <input type="text"
+             id="title"
+             name="title"
+             placeholder="Bijv. Algemene kennis 2026"
+             required>
+    </div>
+
+    <div>
+      <label for="category">Categorie</label>
+      <select name="category_id" id="category" required>
+        <option value="" disabled selected>Kies een categorie...</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Quiz aanmaken</button>
+      <a class="btn btn--ghost btn--sm" href="/dashboard">
+        Terug naar dashboard
+      </a>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>

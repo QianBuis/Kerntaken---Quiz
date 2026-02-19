@@ -1,32 +1,77 @@
-<h2>Scores voor quiz {{ quiz_id }}</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Scores</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-{% if scores %}
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>Gebruiker</th>
-      <th>Score</th>
-      <th>Tijd</th>
-      <th>Datum</th>
-      <th>Actie</th>
-    </tr>
+<body>
 
-    {% for s in scores %}
-      <tr>
-        <td>{{ s.username }}</td>
-        <td>{{ s.score }}</td>
-        <td>{% if s.time_taken %}{{ s.time_taken }}s{% else %}-{% endif %}</td>
-        <td>{{ s.played_at }}</td>
-        <td>
-          <form method="POST" action="/admin/delete-score/{{ s.id }}">
-            <button type="submit">🗑 Verwijder</button>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
-{% else %}
-  <p>Geen scores gevonden.</p>
-{% endif %}
+<div class="card card--wide">
+  <h2 class="center">Scores voor quiz {{ quiz_id }}</h2>
+  <p class="sub center">Beheer en verwijder ongewenste scores.</p>
 
-<br>
-<a href="/dashboard">Terug</a>
+  {% if scores %}
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Gebruiker</th>
+            <th>Score</th>
+            <th>Tijd</th>
+            <th>Datum</th>
+            <th>Actie</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for s in scores %}
+          <tr>
+            <td>{{ s.username }}</td>
+
+            <td>
+              <span class="score-badge">{{ s.score }}</span>
+            </td>
+
+            <td class="small-muted">
+              {% if s.time_taken %}
+                {{ s.time_taken }}s
+              {% else %}
+                -
+              {% endif %}
+            </td>
+
+            <td class="small-muted">{{ s.played_at }}</td>
+
+            <td>
+              <form method="POST" action="/admin/delete-score/{{ s.id }}">
+                <button type="submit" class="btn btn--danger btn--sm">
+                  🗑 Verwijder
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+
+    <div class="empty-state">
+      Geen scores gevonden.
+    </div>
+
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn btn--ghost btn--sm" href="/dashboard">Terug naar dashboard</a>
+  </div>
+
+</div>
+
+</body>
+</html>

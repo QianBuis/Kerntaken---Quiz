@@ -1,31 +1,90 @@
-<h2>Vraag toevoegen</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vraag toevoegen</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<form method="POST">
-  <label>Vraag:</label><br>
-  <input type="text" name="question_text" required><br><br>
+<body>
 
-  <label>Antwoord A:</label><br>
-  <input type="text" name="answer1" required><br>
+<div class="card card--wide">
+  <h2 class="center">Vraag toevoegen</h2>
+  <p class="sub center">Voeg een nieuwe vraag en antwoorden toe aan de quiz.</p>
 
-  <label>Antwoord B:</label><br>
-  <input type="text" name="answer2" required><br>
+  <form method="POST" class="stack stack--lg">
 
-  <label>Antwoord C:</label><br>
-  <input type="text" name="answer3" required><br>
+    <!-- Vraag -->
+    <div>
+      <label for="question_text">Vraag</label>
+      <input type="text"
+             id="question_text"
+             name="question_text"
+             placeholder="Typ hier de vraag..."
+             required>
+    </div>
 
-  <label>Antwoord D:</label><br>
-  <input type="text" name="answer4" required><br><br>
+    <!-- Antwoorden -->
+    <div class="panel">
+      <h3 class="panel__title">Antwoorden</h3>
 
-  <label>Correct antwoord:</label><br>
-  <select name="correct">
-    <option value="0">A</option>
-    <option value="1">B</option>
-    <option value="2">C</option>
-    <option value="3">D</option>
-  </select><br><br>
+      <div class="stack">
 
-  <button type="submit">Opslaan</button>
-</form>
+        <div>
+          <label for="answer1">Antwoord A</label>
+          <input type="text"
+                 id="answer1"
+                 name="answer1"
+                 required>
+        </div>
 
-<br>
-<a href="/dashboard">Terug</a>
+        <div>
+          <label for="answer2">Antwoord B</label>
+          <input type="text"
+                 id="answer2"
+                 name="answer2"
+                 required>
+        </div>
+
+        <div>
+          <label for="answer3">Antwoord C</label>
+          <input type="text"
+                 id="answer3"
+                 name="answer3"
+                 required>
+        </div>
+
+        <div>
+          <label for="answer4">Antwoord D</label>
+          <input type="text"
+                 id="answer4"
+                 name="answer4"
+                 required>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Correct antwoord -->
+    <div>
+      <label for="correct">Correct antwoord</label>
+      <select name="correct" id="correct">
+        <option value="0">A</option>
+        <option value="1">B</option>
+        <option value="2">C</option>
+        <option value="3">D</option>
+      </select>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button type="submit">Opslaan</button>
+      <a class="btn btn--ghost btn--sm" href="/dashboard">Terug</a>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>

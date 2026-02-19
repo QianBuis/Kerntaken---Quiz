@@ -1,24 +1,58 @@
-<h2>Vragen beheren</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vragen beheren</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-{% if questions %}
-  <ul>
-    {% for q in questions %}
-      <li>
-        {{ q.question_text }}
-        |
-        <a href="/admin/edit-question/{{ q.id }}">✏ Bewerken</a>
-        |
-        <form method="POST"
-              action="/admin/delete-question/{{ q.id }}"
-              style="display:inline;">
-          <button type="submit">🗑 Verwijder</button>
-        </form>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>Geen vragen gevonden.</p>
-{% endif %}
+<body>
 
-<br>
-<a href="/dashboard">Terug</a>
+<div class="card card--wide">
+  <h2 class="center">Vragen beheren</h2>
+  <p class="sub center">Bewerk of verwijder bestaande vragen.</p>
+
+  {% if questions %}
+
+    <div class="stack stack--lg">
+      {% for q in questions %}
+        <div class="item">
+          <div style="max-width:70%;">
+            {{ q.question_text }}
+          </div>
+
+          <div class="item__actions">
+            <a class="btn btn--ghost btn--sm"
+               href="/admin/edit-question/{{ q.id }}">
+               ✏ Bewerken
+            </a>
+
+            <form method="POST"
+                  action="/admin/delete-question/{{ q.id }}">
+              <button type="submit"
+                      class="btn btn--danger btn--sm">
+                🗑 Verwijder
+              </button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    <div class="empty-state">
+      Geen vragen gevonden.
+    </div>
+
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn btn--ghost btn--sm" href="/dashboard">Terug naar dashboard</a>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,32 +1,69 @@
-<h2>Scoregeschiedenis van {{ username }}</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoregeschiedenis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-{% if scores %}
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>Quiz</th>
-      <th>Eindscore</th>
-      <th>Tijd</th>
-      <th>Datum</th>
-    </tr>
+<body>
 
-    {% for s in scores %}
-      <tr>
-        <td>{{ s.quiz_title }}</td>
-        <td><b>{{ s.score }}</b></td>
-        <td>
-          {% if s.time_taken is not none %}
-            {{ s.time_taken }}s
-          {% else %}
-            -
-          {% endif %}
-        </td>
-        <td>{{ s.played_at }}</td>
-      </tr>
-    {% endfor %}
-  </table>
-{% else %}
-  <p>Je hebt nog geen scores.</p>
-{% endif %}
+<div class="card card--wide">
+  <h2 class="center">Scoregeschiedenis</h2>
+  <p class="sub center">Overzicht van gespeelde quizzen van <b>{{ username }}</b></p>
 
-<br>
-<a href="/dashboard">Terug naar dashboard</a>
+  {% if scores %}
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Quiz</th>
+            <th>Eindscore</th>
+            <th>Tijd</th>
+            <th>Datum</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in scores %}
+          <tr>
+            <td>{{ s.quiz_title }}</td>
+
+            <td>
+              <span class="score-badge">
+                {{ s.score }}
+              </span>
+            </td>
+
+            <td>
+              {% if s.time_taken is not none %}
+                {{ s.time_taken }}s
+              {% else %}
+                -
+              {% endif %}
+            </td>
+
+            <td>{{ s.played_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+
+    <div class="empty-state">
+      Je hebt nog geen scores.
+    </div>
+
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn btn--ghost" href="/dashboard">Terug naar dashboard</a>
+  </div>
+
+</div>
+
+</body>
+</html>

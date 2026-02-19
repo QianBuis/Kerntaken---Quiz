@@ -1,88 +1,116 @@
-<h2>Welkom {{ username }}</h2>
-<p>Rol: {{ role }}</p>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<hr>
+<body>
 
-<p>
-  <a href="/choose-category">🎯 Start quiz via categorie</a>
-  | <a href="/my-scores">📜 Mijn scores</a>
-</p>
+<div class="card card--wide">
+  <h2 class="center">Welkom {{ username }}</h2>
 
-<h3>Beschikbare quizzen (actief)</h3>
+  <div class="kv">
+    <span>Rol:</span>
+    <span class="badge">{{ role }}</span>
+  </div>
 
-{% if quizzes %}
-  <ul>
-    {% for q in quizzes %}
-      <li>
-        <b>{{ q.title }}</b>
-        {% if q.category %}
-          (Categorie: {{ q.category }})
-        {% endif %}
-        - <a href="/quiz/{{ q.id }}/start">Start</a>
-        | <a href="/leaderboard/{{ q.id }}">🏆 Leaderboard</a>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>Er zijn momenteel geen actieve quizzen.</p>
-{% endif %}
+  <div class="link-row">
+    <a class="btn btn--ghost btn--sm" href="/choose-category">🎯 Start quiz via categorie</a>
+    <a class="btn btn--ghost btn--sm" href="/my-scores">📜 Mijn scores</a>
+    <a class="btn btn--ghost btn--sm" href="/logout">Uitloggen</a>
+  </div>
 
-{% if role == "admin" %}
   <hr>
 
-  <h3>Admin: Nieuwe quiz</h3>
-  <p>
-    <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
-  </p>
+  <div class="grid grid--2">
+    <!-- Actieve quizzen -->
+    <section class="panel">
+      <h3 class="panel__title">Beschikbare quizzen (actief)</h3>
+      <p class="panel__hint">Kies een quiz en ga direct van start.</p>
 
-  <h3>Admin: Quiz beheer</h3>
+      {% if quizzes %}
+        <div class="stack">
+          {% for q in quizzes %}
+            <div class="item">
+              <div>
+                <b>{{ q.title }}</b>
+                {% if q.category %}
+                  <div class="item__meta">Categorie: {{ q.category }}</div>
+                {% endif %}
+              </div>
 
-  {% if admin_quizzes %}
-    <ul>
-      {% for aq in admin_quizzes %}
-        <li>
-          <b>{{ aq.title }}</b>
-          {% if aq.category %}
-            ({{ aq.category }})
-          {% endif %}
+              <div class="item__actions">
+                <a class="btn btn--sm" href="/quiz/{{ q.id }}/start">Start</a>
+                <a class="btn btn--ghost btn--sm" href="/leaderboard/{{ q.id }}">🏆 Leaderboard</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">Er zijn momenteel geen actieve quizzen.</div>
+      {% endif %}
+    </section>
 
-          - Status:
-          {% if aq.is_active == 1 %}
-            <span style="color:green;"><b>Actief</b></span>
-          {% else %}
-            <span style="color:red;"><b>Inactief</b></span>
-          {% endif %}
+    <!-- Admin paneel -->
+    {% if role == "admin" %}
+    <section class="panel">
+      <h3 class="panel__title">Admin</h3>
+      <p class="panel__hint">Beheer quizzen, vragen en scores.</p>
 
-          <br>
+      <div class="link-row" style="justify-content:flex-start; margin:0 0 10px;">
+        <a class="btn btn--sm" href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
+      </div>
 
-          <a href="/admin/add-question/{{ aq.id }}">➕ Vraag toevoegen</a>
-          |
-          <a href="/admin/questions/{{ aq.id }}">📝 Vragen beheren</a>
-          |
-          <a href="/admin/scores/{{ aq.id }}">📊 Scores bekijken</a>
-          |
-          <a href="/leaderboard/{{ aq.id }}">🏆 Leaderboard</a>
+      {% if admin_quizzes %}
+        <div class="stack stack--lg">
+          {% for aq in admin_quizzes %}
+            <div class="item" style="align-items:center;">
+              <div>
+                <b>{{ aq.title }}</b>
+                {% if aq.category %}
+                  <div class="item__meta">{{ aq.category }}</div>
+                {% endif %}
 
-          <form method="POST"
-                action="/admin/toggle-quiz/{{ aq.id }}"
-                style="display:inline; margin-left:10px;">
-            {% if aq.is_active == 1 %}
-              <input type="hidden" name="is_active" value="0">
-              <button type="submit">Zet inactief</button>
-            {% else %}
-              <input type="hidden" name="is_active" value="1">
-              <button type="submit">Zet actief</button>
-            {% endif %}
-          </form>
+                {% if aq.is_active == 1 %}
+                  <div class="item__meta">
+                    Status: <span class="badge badge--success">Actief</span>
+                  </div>
+                {% else %}
+                  <div class="item__meta">
+                    Status: <span class="badge badge--danger">Inactief</span>
+                  </div>
+                {% endif %}
+              </div>
 
-        </li>
-        <br>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Geen quizzen gevonden.</p>
-  {% endif %}
-{% endif %}
+              <div class="item__actions">
+                <a class="btn btn--ghost btn--sm" href="/admin/add-question/{{ aq.id }}">➕ Vraag</a>
+                <a class="btn btn--ghost btn--sm" href="/admin/questions/{{ aq.id }}">📝 Vragen</a>
+                <a class="btn btn--ghost btn--sm" href="/admin/scores/{{ aq.id }}">📊 Scores</a>
+                <a class="btn btn--ghost btn--sm" href="/leaderboard/{{ aq.id }}">🏆</a>
 
-<hr>
-<a href="/logout">Uitloggen</a>
+                <form method="POST" action="/admin/toggle-quiz/{{ aq.id }}" style="margin:0;">
+                  {% if aq.is_active == 1 %}
+                    <input type="hidden" name="is_active" value="0">
+                    <button class="btn btn--danger btn--sm" type="submit">Zet inactief</button>
+                  {% else %}
+                    <input type="hidden" name="is_active" value="1">
+                    <button class="btn btn--success btn--sm" type="submit">Zet actief</button>
+                  {% endif %}
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">Geen quizzen gevonden.</div>
+      {% endif %}
+    </section>
+    {% endif %}
+  </div>
+</div>
+
+</body>
+</html>

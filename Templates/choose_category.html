@@ -1,15 +1,35 @@
-<h2>Kies een categorie</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kies categorie</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<form method="POST">
-  <select name="category_id" required>
-    <option value="" disabled selected>Kies een categorie...</option>
-    {% for c in categories %}
-      <option value="{{ c.id }}">{{ c.name }}</option>
-    {% endfor %}
-  </select>
+<body>
 
-  <button type="submit">Verder</button>
-</form>
+<div class="card">
+  <h2 class="center">Kies een categorie</h2>
+  <p class="sub center">Selecteer een categorie om beschikbare quizzen te bekijken.</p>
 
-<br>
-<a href="/dashboard">Terug naar dashboard</a>
+  <form method="POST">
+    <div>
+      <label for="category">Categorie</label>
+      <select id="category" name="category_id" required>
+        <option value="" disabled selected>Kies een categorie...</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">Verder</button>
+      <a class="btn btn--ghost btn--sm" href="/dashboard">Terug naar dashboard</a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

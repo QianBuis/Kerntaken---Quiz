@@ -1,35 +1,77 @@
-<h2>🏆 Leaderboard - {{ quiz_title }}</h2>
-<p>Top 10 scores</p>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-{% if rows %}
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>#</th>
-      <th>Gebruiker</th>
-      <th>Score</th>
-      <th>Tijd</th>
-      <th>Datum</th>
-    </tr>
+<body>
 
-    {% for r in rows %}
-      <tr>
-        <td><b>{{ loop.index }}</b></td>
-        <td>{{ r.username }}</td>
-        <td><b>{{ r.score }}</b></td>
-        <td>
-          {% if r.time_taken is not none %}
-            {{ r.time_taken }}s
-          {% else %}
-            -
-          {% endif %}
-        </td>
-        <td>{{ r.played_at }}</td>
-      </tr>
-    {% endfor %}
-  </table>
-{% else %}
-  <p>Nog geen scores voor deze quiz.</p>
-{% endif %}
+<div class="card card--wide">
+  <h2 class="center">🏆 Leaderboard</h2>
+  <p class="sub center">
+    <b>{{ quiz_title }}</b> · Top 10 scores
+  </p>
 
-<br>
-<a href="/dashboard">Terug naar dashboard</a>
+  {% if rows %}
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Gebruiker</th>
+            <th>Score</th>
+            <th>Tijd</th>
+            <th>Datum</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>
+              <span class="rank-badge
+                {% if loop.index == 1 %} rank-1{% elif loop.index == 2 %} rank-2{% elif loop.index == 3 %} rank-3{% endif %}">
+                {{ loop.index }}
+              </span>
+            </td>
+
+            <td>{{ r.username }}</td>
+
+            <td>
+              <span class="score-badge">{{ r.score }}</span>
+            </td>
+
+            <td class="small-muted">
+              {% if r.time_taken is not none %}
+                {{ r.time_taken }}s
+              {% else %}
+                -
+              {% endif %}
+            </td>
+
+            <td class="small-muted">{{ r.played_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+
+    <div class="empty-state">
+      Nog geen scores voor deze quiz.
+    </div>
+
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn btn--ghost" href="/dashboard">Terug naar dashboard</a>
+  </div>
+</div>
+
+</body>
+</html>

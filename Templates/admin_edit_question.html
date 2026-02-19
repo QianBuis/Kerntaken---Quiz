@@ -1,48 +1,90 @@
-<h2>Vraag bewerken</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vraag bewerken</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<form method="POST">
+<body>
 
-  <label>Vraag:</label><br>
-  <input type="text"
-         name="question_text"
-         value="{{ question.question_text }}"
-         required><br><br>
+<div class="card card--wide">
+  <h2 class="center">Vraag bewerken</h2>
+  <p class="sub center">Pas de vraag en antwoorden aan.</p>
 
-  <label>Antwoord A:</label><br>
-  <input type="text"
-         name="answer1"
-         value="{{ answers[0].answer_text }}"
-         required><br>
+  <form method="POST" class="stack stack--lg">
 
-  <label>Antwoord B:</label><br>
-  <input type="text"
-         name="answer2"
-         value="{{ answers[1].answer_text }}"
-         required><br>
+    <div>
+      <label for="question_text">Vraag</label>
+      <input type="text"
+             id="question_text"
+             name="question_text"
+             value="{{ question.question_text }}"
+             required>
+    </div>
 
-  <label>Antwoord C:</label><br>
-  <input type="text"
-         name="answer3"
-         value="{{ answers[2].answer_text }}"
-         required><br>
+    <div class="panel">
+      <h3 class="panel__title">Antwoorden</h3>
 
-  <label>Antwoord D:</label><br>
-  <input type="text"
-         name="answer4"
-         value="{{ answers[3].answer_text }}"
-         required><br><br>
+      <div class="stack">
 
-  <label>Correct antwoord:</label><br>
-  <select name="correct">
-    <option value="0" {% if correct_index == 0 %}selected{% endif %}>A</option>
-    <option value="1" {% if correct_index == 1 %}selected{% endif %}>B</option>
-    <option value="2" {% if correct_index == 2 %}selected{% endif %}>C</option>
-    <option value="3" {% if correct_index == 3 %}selected{% endif %}>D</option>
-  </select><br><br>
+        <div>
+          <label for="answer1">Antwoord A</label>
+          <input type="text"
+                 id="answer1"
+                 name="answer1"
+                 value="{{ answers[0].answer_text }}"
+                 required>
+        </div>
 
-  <button type="submit">Opslaan</button>
+        <div>
+          <label for="answer2">Antwoord B</label>
+          <input type="text"
+                 id="answer2"
+                 name="answer2"
+                 value="{{ answers[1].answer_text }}"
+                 required>
+        </div>
 
-</form>
+        <div>
+          <label for="answer3">Antwoord C</label>
+          <input type="text"
+                 id="answer3"
+                 name="answer3"
+                 value="{{ answers[2].answer_text }}"
+                 required>
+        </div>
 
-<br>
-<a href="/dashboard">Terug</a>
+        <div>
+          <label for="answer4">Antwoord D</label>
+          <input type="text"
+                 id="answer4"
+                 name="answer4"
+                 value="{{ answers[3].answer_text }}"
+                 required>
+        </div>
+
+      </div>
+    </div>
+
+    <div>
+      <label for="correct">Correct antwoord</label>
+      <select name="correct" id="correct">
+        <option value="0" {% if correct_index == 0 %}selected{% endif %}>A</option>
+        <option value="1" {% if correct_index == 1 %}selected{% endif %}>B</option>
+        <option value="2" {% if correct_index == 2 %}selected{% endif %}>C</option>
+        <option value="3" {% if correct_index == 3 %}selected{% endif %}>D</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Opslaan</button>
+      <a class="btn btn--ghost btn--sm" href="/dashboard">Terug</a>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,16 +1,45 @@
-<h2>Quizzen in deze categorie</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quizzen</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-{% if quizzes %}
-  <ul>
+<body>
+
+<div class="card card--wide">
+  <h2 class="center">Quizzen in deze categorie</h2>
+  <p class="sub center">Kies een quiz om te starten.</p>
+
+  {% if quizzes %}
+
     {% for q in quizzes %}
-      <li>
-        <b>{{ q.title }}</b> - <a href="/quiz/{{ q.id }}/start">Start</a>
-      </li>
+      <div class="stat" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <b>{{ q.title }}</b>
+        </div>
+        <div>
+          <a class="btn" style="width:auto; padding:8px 14px;" href="/quiz/{{ q.id }}/start">
+            Start
+          </a>
+        </div>
+      </div>
     {% endfor %}
-  </ul>
-{% else %}
-  <p>Geen actieve quizzen in deze categorie.</p>
-{% endif %}
 
-<a href="/choose-category">Andere categorie kiezen</a> |
-<a href="/dashboard">Dashboard</a>
+  {% else %}
+    <div class="stat center">
+      Geen actieve quizzen in deze categorie.
+    </div>
+  {% endif %}
+
+  <div class="actions">
+    <a class="btn btn--ghost" href="/choose-category">Andere categorie</a>
+    <a class="btn btn--ghost" href="/dashboard">Dashboard</a>
+  </div>
+
+</div>
+
+</body>
+</html>

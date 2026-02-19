@@ -1,0 +1,184 @@
+/* ================= THEME ================= */
+:root{
+  --bg:#0b1220; /* pagina achtergrond */
+  --card:rgba(255,255,255,.08); /* card achtergrond */
+  --stroke:rgba(255,255,255,.14); /* borders */
+  --text:#eaf0ff; /* standaard tekst */
+  --muted:rgba(234,240,255,.75); /* subtiele tekst */
+  --primary:#6aa8ff; /* knop kleur 1 */
+  --primary2:#8b5cf6; /* knop kleur 2 */
+  --danger:#ff5a6a; /* delete kleur */
+  --radius:18px; /* afronding */
+  --shadow:0 20px 60px rgba(0,0,0,.45); /* card schaduw */
+}
+
+/* ================= BASE ================= */
+*{box-sizing:border-box;} /* betere layout controle */
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid; /* centreert alles */
+  place-items:center; /* horizontaal + verticaal */
+  padding:24px;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* font */
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(106,168,255,.25), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(139,92,246,.25), transparent 60%),
+    var(--bg); /* basis kleur */
+}
+
+h2{margin:0 0 6px;font-size:26px;} /* titel stijl */
+.sub{margin:0 0 18px;color:var(--muted);font-size:14px;} /* subtitel */
+.center{text-align:center;} /* tekst centreren */
+.muted{color:var(--muted);font-size:13px;} /* kleine grijze tekst */
+
+hr{border:0;height:1px;background:rgba(255,255,255,.1);margin:20px 0;} /* scheidingslijn */
+
+/* ================= CARD ================= */
+.card{
+  width:100%;
+  max-width:420px; /* standaard breedte */
+  padding:26px;
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.card--wide{max-width:500px;} /* bredere pagina */
+
+/* ================= FORMS ================= */
+form{display:grid;gap:12px;margin-top:10px;} /* spacing tussen velden */
+
+label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block;} /* label stijl */
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(10,14,25,.55);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+  transition:.2s ease;
+}
+
+input:focus,select:focus{
+  border-color:rgba(106,168,255,.55); /* focus rand */
+  box-shadow:0 0 0 4px rgba(106,168,255,.18); /* focus glow */
+}
+
+/* ================= BUTTONS ================= */
+button,.btn{
+  width:100%;
+  padding:12px 14px;
+  border:0;
+  border-radius:14px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--primary2)); /* gradient */
+  color:#0b1220;
+  text-align:center;
+  text-decoration:none;
+  transition:.2s ease;
+}
+
+button:hover,.btn:hover{filter:brightness(1.05);} /* hover effect */
+
+.btn--ghost{
+  background:rgba(10,14,25,.55); /* rustige knop */
+  border:1px solid var(--stroke);
+  color:var(--text);
+}
+
+.btn--sm{width:auto;padding:8px 12px;font-size:13px;} /* kleine knop */
+
+.btn--danger{
+  background:rgba(255,90,106,.14); /* delete achtergrond */
+  border:1px solid rgba(255,90,106,.28);
+  color:#ffd0d6;
+}
+
+/* ================= BADGES ================= */
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-size:12px;
+}
+
+.badge--success{background:rgba(34,197,94,.12);} /* actief */
+.badge--danger{background:rgba(255,90,106,.12);} /* inactief */
+
+/* ================= LIST ITEMS ================= */
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  padding:12px;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+}
+
+.item__actions{display:flex;gap:8px;flex-wrap:wrap;} /* knoppen rechts */
+
+/* ================= QUIZ ================= */
+.question{
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(10,14,25,.55);
+}
+
+.answers{display:grid;gap:10px;margin-top:10px;} /* antwoord spacing */
+
+.option{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(10,14,25,.55);
+}
+
+.option:hover{background:rgba(255,255,255,.10);} /* hover optie */
+
+/* ================= TABLES ================= */
+.table-wrapper{
+  margin-top:16px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--stroke);
+  background:rgba(10,14,25,.55);
+}
+
+table{width:100%;border-collapse:collapse;font-size:14px;} /* tabel */
+
+th,td{padding:12px 14px;text-align:left;} /* cell padding */
+
+th{
+  color:var(--muted);
+  border-bottom:1px solid var(--stroke);
+}
+
+tbody tr:hover{background:rgba(255,255,255,.08);} /* row hover */
+
+.score-badge{
+  padding:4px 10px;
+  border-radius:10px;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#0b1220;
+  font-size:13px;
+}
+
+/* ================= HELPERS ================= */
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;} /* knop rij */
+.empty-state{padding:14px;border-radius:14px;border:1px solid var(--stroke);background:rgba(10,14,25,.55);text-align:center;color:var(--muted);} /* geen data */

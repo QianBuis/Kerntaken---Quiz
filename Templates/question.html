@@ -1,42 +1,71 @@
-<h2>Vraag {{ q_index + 1 }}</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vraag {{ q_index + 1 }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 
-<p>
-  <b>Totale tijd:</b>
-  {{ elapsed_min }} minuut{{ '' if elapsed_min == 1 else 'en' }}
-  {{ elapsed_sec }} seconde{{ '' if elapsed_sec == 1 else 'n' }}
-</p>
+<body>
 
-{% if feedback %}
-  <p style="font-weight:bold;">{{ feedback }}</p>
-{% endif %}
-
-<p>{{ question.question_text }}</p>
-
-<form method="POST">
-  {% for a in question.answers %}
+<div class="card card--wide">
+  <div class="header-row">
     <div>
-      <label>
-        <input
-          type="radio"
-          name="answer_id"
-          value="{{ a.id }}"
-          required
-          {% if chosen_answer_id == a.id %}checked{% endif %}
-          {% if feedback %}disabled{% endif %}
-        >
-        {{ ["A","B","C","D"][loop.index0] }}. {{ a.answer_text }}
-      </label>
+      <h2>Vraag {{ q_index + 1 }}</h2>
+      <p class="muted">Kies één antwoord en bevestig.</p>
     </div>
-  {% endfor %}
 
-  <br>
+    <div class="pill">
+      ⏱️ Totale tijd:
+      <b style="color:var(--text); font-weight:700;">
+        {{ elapsed_min }} minuut{{ '' if elapsed_min == 1 else 'en' }}
+        {{ elapsed_sec }} seconde{{ '' if elapsed_sec == 1 else 'n' }}
+      </b>
+    </div>
+  </div>
 
-  {% if not feedback %}
-      <button type="submit">Bevestig antwoord</button>
-  {% else %}
-      <button type="submit" name="next">Volgende vraag</button>
+  {% if feedback %}
+    <div class="feedback center">
+      {{ feedback }}
+    </div>
   {% endif %}
-</form>
 
-<br>
-<a href="/dashboard">Stoppen</a>
+  <div class="question">
+    {{ question.question_text }}
+  </div>
+
+  <form method="POST">
+    <div class="answers">
+      {% for a in question.answers %}
+        <label class="option">
+          <input
+            type="radio"
+            name="answer_id"
+            value="{{ a.id }}"
+            required
+            {% if chosen_answer_id == a.id %}checked{% endif %}
+            {% if feedback %}disabled{% endif %}
+          >
+          <span class="option-label">
+            <span class="letter">{{ ["A","B","C","D"][loop.index0] }}</span>
+            {{ a.answer_text }}
+          </span>
+        </label>
+      {% endfor %}
+    </div>
+
+    <div class="actions" style="margin-top:16px;">
+      {% if not feedback %}
+        <button type="submit">Bevestig antwoord</button>
+      {% else %}
+        <button type="submit" name="next">Volgende vraag</button>
+      {% endif %}
+
+      <a class="btn btn--ghost" href="/dashboard">Stoppen</a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

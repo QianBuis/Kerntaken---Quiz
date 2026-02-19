@@ -1,21 +1,46 @@
-<h2>Quiz afgerond!</h2>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Resultaat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <div class="card card--wide">
+    <h2 class="center">🎉 Quiz afgerond!</h2>
 
-<p><b>Goede antwoorden:</b> {{ correct }}</p>
+    <div class="stat">
+      <b>Goede antwoorden:</b><br>
+      {{ correct }}
+    </div>
 
-<p><b>Totale tijd:</b>
-   {{ minutes }} minuut{{ '' if minutes == 1 else 'en' }}
-   {{ seconds }} seconde{{ '' if seconds == 1 else 'n' }}
-</p>
+    <div class="stat">
+      <b>Totale tijd:</b><br>
+      {{ minutes }} minuut{{ '' if minutes == 1 else 'en' }}
+      {{ seconds }} seconde{{ '' if seconds == 1 else 'n' }}
+    </div>
 
-<hr>
+    <hr>
 
-<p><b>Punten (goede antwoorden):</b> {{ points_correct }}</p>
-<p><b>Snelheidsbonus:</b> {{ speed_bonus }}</p>
+    <div class="stat">
+      <b>Punten (goede antwoorden):</b><br>
+      {{ points_correct }}
+    </div>
 
-<h2>Eindscore: {{ final_score }} punten</h2>
+    <div class="stat">
+      <b>Snelheidsbonus:</b><br>
+      {{ speed_bonus }}
+    </div>
 
-<br>
+    <div class="score">
+      Eindscore: {{ final_score }} punten
+    </div>
 
-<a href="/dashboard">Terug naar dashboard</a>
-|
-<a href="/quiz/{{ quiz_id }}/restart">🔁 Opnieuw spelen</a>
+    <div class="actions">
+      <a class="btn btn--ghost" href="/dashboard">Terug naar dashboard</a>
+      <a class="btn" href="/quiz/{{ quiz_id }}/restart">🔁 Opnieuw spelen</a>
+    </div>
+  </div>
+</body>
+</html>
