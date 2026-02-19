@@ -1,0 +1,35 @@
+<h2>🏆 Leaderboard - {{ quiz_title }}</h2>
+<p>Top 10 scores</p>
+
+{% if rows %}
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>#</th>
+      <th>Gebruiker</th>
+      <th>Score</th>
+      <th>Tijd</th>
+      <th>Datum</th>
+    </tr>
+
+    {% for r in rows %}
+      <tr>
+        <td><b>{{ loop.index }}</b></td>
+        <td>{{ r.username }}</td>
+        <td><b>{{ r.score }}</b></td>
+        <td>
+          {% if r.time_taken is not none %}
+            {{ r.time_taken }}s
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ r.played_at }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Nog geen scores voor deze quiz.</p>
+{% endif %}
+
+<br>
+<a href="/dashboard">Terug naar dashboard</a>

@@ -281,3 +281,27 @@ def get_user_scores(user_id):
     cursor.close()
     conn.close()
     return rows
+
+def get_leaderboard_for_quiz(quiz_id, limit=10):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            u.username,
+            s.score,
+            s.time_taken,
+            s.played_at,
+            q.title AS quiz_title
+        FROM scores s
+        JOIN users u ON s.user_id = u.id
+        JOIN quizzes q ON s.quiz_id = q.id
+        WHERE s.quiz_id = %s
+        ORDER BY s.score DESC, s.time_taken ASC, s.played_at ASC
+        LIMIT %s
+    """, (quiz_id, limit))
+
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return rows

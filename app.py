@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect, session
 from quiz import get_user_scores
 from auth import register_user, login_user
 from admin import admin_bp
+from quiz import get_leaderboard_for_quiz
+
 from quiz import (
     get_active_quizzes,
     get_all_quizzes,
@@ -268,6 +270,21 @@ def my_scores():
         "my_scores.html",
         username=session.get("username"),
         scores=scores
+    )
+
+@app.route("/leaderboard/<int:quiz_id>")
+def leaderboard(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    rows = get_leaderboard_for_quiz(quiz_id, 10)
+    quiz_title = rows[0]["quiz_title"] if rows else f"Quiz {quiz_id}"
+
+    return render_template(
+        "leaderboard.html",
+        quiz_id=quiz_id,
+        quiz_title=quiz_title,
+        rows=rows
     )
 
 

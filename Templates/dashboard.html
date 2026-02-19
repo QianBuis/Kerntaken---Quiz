@@ -19,6 +19,7 @@
           (Categorie: {{ q.category }})
         {% endif %}
         - <a href="/quiz/{{ q.id }}/start">Start</a>
+        | <a href="/leaderboard/{{ q.id }}">🏆 Leaderboard</a>
       </li>
     {% endfor %}
   </ul>
@@ -59,6 +60,8 @@
           <a href="/admin/questions/{{ aq.id }}">📝 Vragen beheren</a>
           |
           <a href="/admin/scores/{{ aq.id }}">📊 Scores bekijken</a>
+          |
+          <a href="/leaderboard/{{ aq.id }}">🏆 Leaderboard</a>
 
           <form method="POST"
                 action="/admin/toggle-quiz/{{ aq.id }}"
