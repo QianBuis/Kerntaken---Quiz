@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, session
 from auth import register_user, login_user
 from admin import admin_bp
 from quiz import get_all_quizzes  # voeg bovenaan toe bij je imports
+from quiz import save_score
+import time
+
 from quiz import (
     
     get_active_quizzes,
@@ -117,6 +120,10 @@ def quiz_start(quiz_id):
     session["chosen_answers"] = {}
     session.pop("last_feedback", None)
 
+    # score-timer start
+    session["quiz_start_time"] = time.time()
+    session["score_saved"] = False
+
     return redirect(f"/quiz/{quiz_id}/question")
 
 
@@ -186,8 +193,21 @@ def quiz_result(quiz_id):
         return redirect("/dashboard")
 
     score = session.get("correct", 0)
-    return render_template("result.html", quiz_id=quiz_id, score=score)
 
+    # tijd berekenen (optioneel veld)
+    start = session.get("quiz_start_time")
+    time_taken = None
+    if start:
+        time_taken = int(time.time() - start)
+
+    # 1x opslaan
+    if not session.get("score_saved", False):
+        user_id = session.get("user_id")
+        if user_id:
+            save_score(user_id, quiz_id, score, time_taken)
+            session["score_saved"] = True
+
+    return render_template("result.html", quiz_id=quiz_id, score=score)
 
 @app.route("/logout")
 def logout():
