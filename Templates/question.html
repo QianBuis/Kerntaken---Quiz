@@ -1,5 +1,11 @@
 <h2>Vraag {{ q_index + 1 }}</h2>
 
+<p>
+  <b>Totale tijd:</b>
+  {{ elapsed_min }} minuut{{ '' if elapsed_min == 1 else 'en' }}
+  {{ elapsed_sec }} seconde{{ '' if elapsed_sec == 1 else 'n' }}
+</p>
+
 {% if feedback %}
   <p style="font-weight:bold;">{{ feedback }}</p>
 {% endif %}
