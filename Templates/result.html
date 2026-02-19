@@ -1,7 +1,21 @@
 <h2>Quiz afgerond!</h2>
 
-<p>Jouw score (goede antwoorden): <b>{{ score }}</b></p>
+<p><b>Goede antwoorden:</b> {{ correct }}</p>
+<p><b>Tijd:</b> {{ time_taken }} seconden</p>
+
+<hr>
+
+<p><b>Punten (goede antwoorden):</b> {{ points_correct }}</p>
+<p><b>Snelheidsbonus:</b> {{ speed_bonus }}</p>
+
+<h2>Eindscore: {{ final_score }} punten</h2>
+
+<p>
+  Berekening: ({{ correct }} × 100) + max(0, 300 - {{ time_taken }})
+</p>
+
+<br>
 
 <a href="/dashboard">Terug naar dashboard</a>
 |
-<a href="/quiz/{{ quiz_id }}/start">Opnieuw spelen</a>
+<a href="/quiz/{{ quiz_id }}/start">🔁 Opnieuw spelen</a>

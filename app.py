@@ -183,7 +183,6 @@ def quiz_question(quiz_id):
         chosen_answer_id=chosen_answer_id
     )
 
-
 @app.route("/quiz/<int:quiz_id>/result")
 def quiz_result(quiz_id):
     if "username" not in session:
@@ -192,22 +191,32 @@ def quiz_result(quiz_id):
     if session.get("quiz_id") != quiz_id:
         return redirect("/dashboard")
 
-    score = session.get("correct", 0)
+    correct = session.get("correct", 0)
 
-    # tijd berekenen (optioneel veld)
     start = session.get("quiz_start_time")
-    time_taken = None
+    time_taken = 0
     if start:
         time_taken = int(time.time() - start)
 
-    # 1x opslaan
+    points_correct = correct * 100
+    speed_bonus = max(0, 300 - time_taken)  # binnen 5 min = bonus
+    final_score = points_correct + speed_bonus
+
     if not session.get("score_saved", False):
         user_id = session.get("user_id")
         if user_id:
-            save_score(user_id, quiz_id, score, time_taken)
+            save_score(user_id, quiz_id, final_score, time_taken)
             session["score_saved"] = True
 
-    return render_template("result.html", quiz_id=quiz_id, score=score)
+    return render_template(
+        "result.html",
+        quiz_id=quiz_id,
+        correct=correct,
+        time_taken=time_taken,
+        points_correct=points_correct,
+        speed_bonus=speed_bonus,
+        final_score=final_score
+    )
 
 @app.route("/logout")
 def logout():
