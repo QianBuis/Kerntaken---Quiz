@@ -4,6 +4,7 @@ from quiz import add_question_with_answers, get_active_quizzes
 from quiz import get_questions_by_quiz, delete_question
 from quiz import get_question_with_all_answers, update_question_with_answers
 from quiz import get_all_quizzes, set_quiz_active
+from quiz import get_scores_for_quiz, delete_score
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -125,3 +126,24 @@ def toggle_quiz(quiz_id):
     set_quiz_active(quiz_id, is_active)
 
     return redirect("/dashboard")
+
+@admin_bp.route("/admin/scores/<int:quiz_id>")
+def admin_scores(quiz_id):
+    if "username" not in session:
+        return redirect("/login")
+    if session.get("role") != "admin":
+        return redirect("/dashboard")
+
+    scores = get_scores_for_quiz(quiz_id)
+    return render_template("admin_scores.html", quiz_id=quiz_id, scores=scores)
+
+
+@admin_bp.route("/admin/delete-score/<int:score_id>", methods=["POST"])
+def admin_delete_score(score_id):
+    if "username" not in session:
+        return redirect("/login")
+    if session.get("role") != "admin":
+        return redirect("/dashboard")
+
+    delete_score(score_id)
+    return redirect(request.referrer or "/dashboard")

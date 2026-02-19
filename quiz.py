@@ -223,3 +223,31 @@ def set_quiz_active(quiz_id, is_active):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_scores_for_quiz(quiz_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT s.id, s.score, s.time_taken, s.played_at, u.username
+        FROM scores s
+        JOIN users u ON s.user_id = u.id
+        WHERE s.quiz_id = %s
+        ORDER BY s.played_at DESC
+    """, (quiz_id,))
+
+    scores = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return scores
+
+
+def delete_score(score_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM scores WHERE id=%s", (score_id,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()

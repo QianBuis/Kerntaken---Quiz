@@ -1,6 +1,8 @@
 <h2>Welkom {{ username }}</h2>
 <p>Rol: {{ role }}</p>
 
+<hr>
+
 <p>
   <a href="/choose-category">🎯 Start quiz via categorie</a>
 </p>
@@ -12,7 +14,9 @@
     {% for q in quizzes %}
       <li>
         <b>{{ q.title }}</b>
-        {% if q.category %} (Categorie: {{ q.category }}) {% endif %}
+        {% if q.category %}
+          (Categorie: {{ q.category }})
+        {% endif %}
         - <a href="/quiz/{{ q.id }}/start">Start</a>
       </li>
     {% endfor %}
@@ -24,18 +28,22 @@
 {% if role == "admin" %}
   <hr>
 
+  <h3>Admin: Nieuwe quiz</h3>
   <p>
     <a href="/admin/create-quiz">➕ Nieuwe quiz aanmaken</a>
   </p>
 
-  <h3>Admin: Quiz beheer (actief/inactief)</h3>
+  <h3>Admin: Quiz beheer</h3>
 
   {% if admin_quizzes %}
     <ul>
       {% for aq in admin_quizzes %}
         <li>
           <b>{{ aq.title }}</b>
-          {% if aq.category %} ({{ aq.category }}) {% endif %}
+          {% if aq.category %}
+            ({{ aq.category }})
+          {% endif %}
+
           - Status:
           {% if aq.is_active == 1 %}
             <span style="color:green;"><b>Actief</b></span>
@@ -43,8 +51,14 @@
             <span style="color:red;"><b>Inactief</b></span>
           {% endif %}
 
-          | <a href="/admin/add-question/{{ aq.id }}">➕ Vraag toevoegen</a>
-          | <a href="/admin/questions/{{ aq.id }}">📝 Vragen beheren</a>
+          <br>
+
+          <!-- Admin acties -->
+          <a href="/admin/add-question/{{ aq.id }}">➕ Vraag toevoegen</a>
+          |
+          <a href="/admin/questions/{{ aq.id }}">📝 Vragen beheren</a>
+          |
+          <a href="/admin/scores/{{ aq.id }}">📊 Scores bekijken</a>
 
           <form method="POST"
                 action="/admin/toggle-quiz/{{ aq.id }}"
@@ -57,7 +71,9 @@
               <button type="submit">Zet actief</button>
             {% endif %}
           </form>
+
         </li>
+        <br>
       {% endfor %}
     </ul>
   {% else %}
@@ -67,4 +83,3 @@
 
 <hr>
 <a href="/logout">Uitloggen</a>
-

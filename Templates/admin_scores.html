@@ -1,0 +1,32 @@
+<h2>Scores voor quiz {{ quiz_id }}</h2>
+
+{% if scores %}
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Gebruiker</th>
+      <th>Score</th>
+      <th>Tijd</th>
+      <th>Datum</th>
+      <th>Actie</th>
+    </tr>
+
+    {% for s in scores %}
+      <tr>
+        <td>{{ s.username }}</td>
+        <td>{{ s.score }}</td>
+        <td>{% if s.time_taken %}{{ s.time_taken }}s{% else %}-{% endif %}</td>
+        <td>{{ s.played_at }}</td>
+        <td>
+          <form method="POST" action="/admin/delete-score/{{ s.id }}">
+            <button type="submit">🗑 Verwijder</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Geen scores gevonden.</p>
+{% endif %}
+
+<br>
+<a href="/dashboard">Terug</a>
