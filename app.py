@@ -1,6 +1,6 @@
 import time
 from flask import Flask, render_template, request, redirect, session
-
+from quiz import get_user_scores
 from auth import register_user, login_user
 from admin import admin_bp
 from quiz import (
@@ -254,6 +254,21 @@ def quiz_result(quiz_id):
 def logout():
     session.clear()
     return redirect("/login")
+
+
+@app.route("/my-scores")
+def my_scores():
+    if "username" not in session:
+        return redirect("/login")
+
+    user_id = session.get("user_id")
+    scores = get_user_scores(user_id)
+
+    return render_template(
+        "my_scores.html",
+        username=session.get("username"),
+        scores=scores
+    )
 
 
 if __name__ == "__main__":

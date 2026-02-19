@@ -264,3 +264,20 @@ def save_score(user_id, quiz_id, score, time_taken=None):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_user_scores(user_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT s.id, s.score, s.time_taken, s.played_at, q.title AS quiz_title
+        FROM scores s
+        JOIN quizzes q ON s.quiz_id = q.id
+        WHERE s.user_id = %s
+        ORDER BY s.played_at DESC
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return rows

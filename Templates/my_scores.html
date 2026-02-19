@@ -1,0 +1,32 @@
+<h2>Scoregeschiedenis van {{ username }}</h2>
+
+{% if scores %}
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Quiz</th>
+      <th>Eindscore</th>
+      <th>Tijd</th>
+      <th>Datum</th>
+    </tr>
+
+    {% for s in scores %}
+      <tr>
+        <td>{{ s.quiz_title }}</td>
+        <td><b>{{ s.score }}</b></td>
+        <td>
+          {% if s.time_taken is not none %}
+            {{ s.time_taken }}s
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ s.played_at }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Je hebt nog geen scores.</p>
+{% endif %}
+
+<br>
+<a href="/dashboard">Terug naar dashboard</a>
